@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width='device-width', initial-scale=1.0">
+    <title>合并渲染测试</title>
+    <style>
+        #test {
+            width: 100px;
+            color: #0c0;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="test">合并渲染测试</div>
+    <script>
+        // 死循环指定的时间
+        function delay(duration) {
+            var start = Date.now();
+            while (Date.now() - start < duration) { }
+        }
+
+        // 创建测试元素并添加到DOM
+        const element = document.getElementById('test');
+
+        // 微任务版本（合并渲染：只执行一次渲染）
+        element.style.color = 'red';
+        Promise.resolve().then(() => {
+            element.style.color = 'blue';
+        });
+
+        // 宏任务版本（非合并渲染：两次渲染）
+        // element.style.color = "red"; // 第一次渲染
+        // setTimeout(() => {
+        //     element.style.color = "blue"; // 再次渲染
+        // }, 20);
+
+        // 监听渲染结果
+        let renderCount = 0;
+        function logRender() {
+            // 在下一个渲染帧检查颜色结果
+            const color = getComputedStyle(element).color;
+            console.log('color:', color)
+
+            requestAnimationFrame(logRender);
+        }
+        requestAnimationFrame(logRender);
+    </script>
+</body>
+
+</html>
