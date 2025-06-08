@@ -20,7 +20,7 @@ class LRUCache {
     }
     get(key: any) {
         const data = this.data;
-        if (!data.has(key)) return null; // 如果没有，则直接返回空
+        if (!data.has(key)) return -1; // 如果没有，则直接返回空
 
         const value = data.get(key);
 
